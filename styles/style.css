@@ -1,10 +1,47 @@
+button {
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+}
+
 #calculator {
     display: grid;
     grid-template-rows: 2;
     background-color: gray;
+    margin: 0 auto;
+    width: 400px;
+    border-radius: 5px;
 }
 #buttons {
     display:grid;
+    grid-gap: 10px;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(3, 1fr) + 2fr 1fr 1fr;
+    padding: 10px;
+}
+#zero {
+    grid-column: 1/3;
+}
+#display {
+    padding: 7px;
+    text-align: right;
+    font-family: Quantico, monospace;
+    border: 5px solid black;
+    border-radius: 5px;
+    margin: 10px;
+    background-color: white;
+    font-size: 48px;
+}
+@media(max-width: 400px) {
+    #calculator {
+        width: auto;
+    }
+    #buttons {
+        grid-gap: 0px;
+        padding: 0px;
+    }
+    #display {
+        padding: 0px;
+        margin: 0px;
+        border: 0;
+    }
 }
