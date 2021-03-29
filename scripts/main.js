@@ -1,7 +1,7 @@
 // UNIVERSAL VARIABLE DECLARATIONS
 let number1;
 let number2;
-let operation;
+let operator;
 let displayValue = "0";
 const displayWindow = document.querySelector('#display');
 displayWindow.textContent = 0;
@@ -22,7 +22,15 @@ function divide(number1, number2) {
 
 // CALCULATOR FUNCTIONS
 function operate(operator, number1, number2) {
-    return operator(number1, number2);
+    if (operator == "add") {
+        return add(number1, number2);
+    } else if (operator == "subtract") {
+        return subtract(number1, number2);
+    } else if (operator == "multiply") {
+        return multiply(number1, number2);
+    } else if (operator == "divide") {
+        return divide(number1, number2);
+    }
 }
 
 // DISPLAY FUNCTIONS
@@ -51,17 +59,53 @@ function deleteLast() {
 function undoAll() {
     number1 = undefined;
     number2 = undefined;
-    operation = undefined;
+    operator = undefined;
     displayValue = "0";
     updateDisplay();
 }
 
-function operationAssignment(x) {
-    if (operation != undefined) {
-        // needs to call operate()
+function operatorAssignment(x) {
+    if (number1 == undefined) {
+    number1 = Number(displayValue);
+    displayValue = "0";
+    operator = x;
     } else {
-        operation = x
+        calculate()
+        operator = x;
     }
+}
+
+function dotPress() {
+    if (displayValue.search(/\./) >= 0) {
+        return;
+    } else {
+        displayValue = displayValue + ".";
+    }
+    updateDisplay();
+}
+
+function calculate() {
+    if (operator == undefined) {
+        number1 = Number(displayValue);
+        displayValue = "0";
+    } else {
+        number2 = Number(displayValue);
+        displayValue = operate(operator, number1, number2);
+        number1 = displayValue;
+        operator = undefined;
+        displayValue = displayValue.toString();
+        updateDisplay();
+        displayValue = "0";
+    }
+}
+
+function flip() {
+    if (displayValue.search("-") == 0) {
+        displayValue = displayValue.slice(1);
+    } else if (displayValue.search("-") < 0) {
+        displayValue = "-" + displayValue;
+    }
+    updateDisplay();
 }
 
 function updateDisplay() {
@@ -94,10 +138,10 @@ const button6 = document.querySelector('#six');
 button6.addEventListener('click', () => keyPress(6));
 
 const buttonMultiply = document.querySelector('#multiply');
-buttonMultiply.addEventListener('click', () => operationAssignment("multiplication"));
+buttonMultiply.addEventListener('click', () => operatorAssignment("multiply"));
 
 const buttonDivide = document.querySelector('#divide');
-buttonDivide.addEventListener('click', () => operationAssignment("division"));
+buttonDivide.addEventListener('click', () => operatorAssignment("divide"));
 
 const button1 = document.querySelector('#one');
 button1.addEventListener('click', () => keyPress(1));
@@ -109,25 +153,19 @@ const button3 = document.querySelector('#three');
 button3.addEventListener('click', () => keyPress(3));
 
 const buttonAdd = document.querySelector('#add');
-buttonAdd.addEventListener('click', () => operationAssignment("addition"));
+buttonAdd.addEventListener('click', () => operatorAssignment("add"));
 
 const buttonSubtract = document.querySelector('#subtract');
-buttonSubtract.addEventListener('click', () => operationAssignment("subtraction"));
+buttonSubtract.addEventListener('click', () => operatorAssignment("subtract"));
 
 const button0 = document.querySelector('#zero');
 button0.addEventListener('click', () => keyPress(0));
 
 const buttonDot = document.querySelector('#dot');
-buttonDot.addEventListener('click', () => {
-
-});
+buttonDot.addEventListener('click', () => dotPress());
 
 const buttonEquals = document.querySelector('#equals');
-buttonEquals.addEventListener('', () => {
-
-});
+buttonEquals.addEventListener('click', () => calculate());
 
 const buttonFlip = document.querySelector('#flip');
-buttonFlip.addEventListener('', () => {
-
-});
+buttonFlip.addEventListener('click', () => flip());
