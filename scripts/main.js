@@ -28,16 +28,16 @@ function operate(operator, number1, number2) {
         return subtract(number1, number2);
     } else if (operator == "multiply") {
         return multiply(number1, number2);
-    } else if (operator == "divide") {
+    } else if (operator == "divide" && number2 != 0) {
         return divide(number1, number2);
     }
 }
 
-// DISPLAY FUNCTIONS
+// KEY FUNCTIONS
 function keyPress(x) {
     if (displayValue == 0) {
         displayValue = x;
-    } else  if (displayValue.length < 12) {
+    } else  if (displayValue.length < 11) {
         displayValue = displayValue + x;
     }
     updateDisplay();
@@ -76,7 +76,7 @@ function operatorAssignment(x) {
 function dotPress() {
     if (displayValue.search(/\./) >= 0) {
         return;
-    } else if (displayValue.length < 11) {
+    } else if (displayValue.length < 10) {
         displayValue = displayValue + ".";
     }
     updateDisplay();
@@ -87,13 +87,29 @@ function calculate() {
         return;
     } else {
         number2 = Number(displayValue);
+        if (operator == "divide" && number2 == 0) {
+            displayWindow.textContent = "undefined";
+            number1 = undefined;
+            number2 = undefined;
+            operator = undefined;
+            displayValue = "0";
+        } else {
         displayValue = operate(operator, number1, number2);
         displayValue = roundUp(displayValue);
-        number1 = displayValue;
-        operator = undefined;
-        displayValue = displayValue.toString();
-        updateDisplay();
+        if (displayValue == "high value error") {
+            displayWindow.textContent = "value too high";
+            number1 = undefined;
+            number2 = undefined;
+            operator = undefined;
+            displayValue = "0";
+        } else {
+            number1 = displayValue;
+            operator = undefined;
+            displayValue = displayValue.toString();
+            updateDisplay();
+        }
     }
+}
 }
 
 function flip() {
@@ -110,11 +126,13 @@ function flip() {
 
 function roundUp(x) {
     let test = x.toString()
-    if (test.length <= 12) {
+    if (test.length <= 11) {
         return x;
-    } else if (test.length > 12) {
-        let cut = test.slice(0, 12);
+    } else if (test.length > 11 && test.search(".")) {
+        let cut = test.slice(0, 11);
         return Number(cut);
+    } else if (test.length > 11 && !test.search(".")) {
+        return "high value error";
     }
 }
 
